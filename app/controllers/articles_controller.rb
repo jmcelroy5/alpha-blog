@@ -1,6 +1,7 @@
 class ArticlesController < ApplicationController
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
+
   def show
-    @article = Article.find(params[:id])
   end
 
   def index
@@ -15,7 +16,7 @@ class ArticlesController < ApplicationController
     # Require the top-level key of article and permit title and description
     # from there to create this article instance variable. This whitelisting
     # is necessary due to Rails security feature.
-    @article = Article.new(params.require(:article).permit(:title, :description))
+    @article = Article.new(article_params)
     if @article.save
       # more verbose way: redirect_to article_path(@article)
       flash[:notice] = "Article created successfully"
@@ -26,17 +27,31 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+    set_article
   end
 
   def update
-    @article = Article.find(params[:id])
-    updated = @article.update(params.require(:article).permit(:title, :description))
+    updated = @article.update(article_params)
     if updated
       flash[:notice] = "Article was updated successfully"
       redirect_to @article
     else
       render 'edit'
     end
+  end
+
+  def destroy
+    @article.destroy
+    redirect_to articles_path
+  end
+
+  private
+  
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :description)
   end
 end
