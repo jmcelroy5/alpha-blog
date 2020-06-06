@@ -17,6 +17,8 @@ class ArticlesController < ApplicationController
     # from there to create this article instance variable. This whitelisting
     # is necessary due to Rails security feature.
     @article = Article.new(article_params)
+    # temporarily hardcode user
+    @article.user = User.first
     if @article.save
       # more verbose way: redirect_to article_path(@article)
       flash[:notice] = "Article created successfully"
