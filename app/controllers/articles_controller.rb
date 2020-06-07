@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
   end
 
   def index
-    @articles = Article.all
+    @articles = Article.paginate(page: params[:page], per_page: 2)
   end
 
   def new
@@ -18,7 +18,7 @@ class ArticlesController < ApplicationController
     # is necessary due to Rails security feature.
     @article = Article.new(article_params)
     # temporarily hardcode user
-    @article.user = User.first
+    @article.user_id = 6
     if @article.save
       # more verbose way: redirect_to article_path(@article)
       flash[:notice] = "Article created successfully"
