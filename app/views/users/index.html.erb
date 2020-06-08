@@ -13,7 +13,9 @@
           <%= link_to gravatar_for(user, size: 150), user_path(user) %>
           <p class="card-text"><%= user.articles.count %> articles</p>
           <%= link_to 'View Profile', user_path(user), class: 'btn btn-outline-success' %>
-          <%= link_to 'Edit Profile', edit_user_path(user), class: 'btn btn-outline-info' %>
+          <% if logged_in? && current_user == user %>
+            <%= link_to 'Edit Profile', edit_user_path(user), class: 'btn btn-outline-info' %>
+          <% end %>
         </div>
         <div class="card-footer text-muted">
           <small>

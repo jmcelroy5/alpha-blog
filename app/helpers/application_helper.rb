@@ -1,3 +1,4 @@
+# helper methods for views
 module ApplicationHelper
   def gravatar_for(user, options = { size: 80 })
     email_address = user.email.downcase

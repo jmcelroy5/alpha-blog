@@ -1,5 +1,7 @@
 class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update, :destroy]
+  before_action :require_user, except: [:index, :show]
+  before_action :require_same_user, only: [:edit, :update, :destroy]
 
   def show
   end
@@ -18,7 +20,7 @@ class ArticlesController < ApplicationController
     # is necessary due to Rails security feature.
     @article = Article.new(article_params)
     # temporarily hardcode user
-    @article.user_id = 6
+    @article.user_id = current_user.id
     if @article.save
       # more verbose way: redirect_to article_path(@article)
       flash[:notice] = "Article created successfully"
@@ -55,5 +57,12 @@ class ArticlesController < ApplicationController
 
   def article_params
     params.require(:article).permit(:title, :description)
+  end
+
+  def require_same_user
+    if current_user != @article.user
+      flash[:alert] = "You are unauthorized to access that"
+      redirect_to @article
+    end
   end
 end
