@@ -15,11 +15,7 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    # Require the top-level key of article and permit title and description
-    # from there to create this article instance variable. This whitelisting
-    # is necessary due to Rails security feature.
     @article = Article.new(article_params)
-    # temporarily hardcode user
     @article.user_id = current_user.id
     if @article.save
       # more verbose way: redirect_to article_path(@article)
@@ -31,7 +27,6 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    set_article
   end
 
   def update
@@ -56,6 +51,8 @@ class ArticlesController < ApplicationController
   end
 
   def article_params
+    # Require the top-level key of article and permit title and description attributes.
+    # This is necessary due to Rails security feature.
     params.require(:article).permit(:title, :description)
   end
 
